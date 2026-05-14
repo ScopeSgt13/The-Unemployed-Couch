@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enshrouded Review — The Unemployed Couch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=VT323:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #00E5CC;
+    --teal-dark: #00A896;
+    --teal-dim: #006B60;
+    --pink: #E8177A;
+    --pink-dark: #A01055;
+    --pink-light: #FF4DA6;
+    --charcoal: #1C1C24;
+    --charcoal2: #13131A;
+    --charcoal3: #0D0D12;
+    --charcoal4: #252530;
+    --white: #E8F4F8;
+    --red-glitch: #FF2020;
+    --cyan-glitch: #00FFFF;
+    --scanline: rgba(0,0,0,0.22);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--charcoal3);
+    color: var(--white);
+    font-family: 'Share Tech Mono', monospace;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, var(--scanline) 2px, var(--scanline) 4px);
+    pointer-events: none; z-index: 9999;
+    animation: flicker 10s infinite;
+  }
+  @keyframes flicker {
+    0%, 94%, 100% { opacity: 1; }
+    95% { opacity: 0.8; } 96% { opacity: 1; } 97.5% { opacity: 0.88; }
+  }
+
+  /* NAV */
+  nav {
+    background: var(--charcoal2);
+    border-bottom: 3px solid var(--teal);
+    box-shadow: 0 3px 0 var(--teal-dim), 0 0 30px rgba(0,229,204,0.15);
+    padding: 0 2rem; position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between; height: 58px;
+  }
+  .nav-logo {
+    font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--teal);
+    text-shadow: 2px 2px 0 var(--teal-dark); letter-spacing: 1px;
+    text-decoration: none; display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo-uc {
+    font-size: 16px; color: var(--charcoal3); background: var(--teal);
+    padding: 3px 7px; display: inline-block; position: relative; font-style: italic;
+  }
+  .nav-logo-uc::before { content:'UC'; position:absolute; inset:0; padding:3px 7px; color:var(--red-glitch); transform:translate(-2px,0); opacity:0.6; }
+  .nav-logo-uc::after  { content:'UC'; position:absolute; inset:0; padding:3px 7px; color:var(--cyan-glitch); transform:translate(2px,0); opacity:0.6; }
+  .nav-logo span { color: var(--white); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--white); text-decoration:none; letter-spacing:1px; transition:color 0.15s; }
+  .nav-links a:hover { color: var(--teal); }
+  .nav-links a::before { content:'▶ '; color:var(--pink); opacity:0; transition:opacity 0.15s; }
+  .nav-links a:hover::before { opacity: 1; }
+  .nav-social { display: flex; gap: 1rem; align-items: center; }
+  .nav-social a { font-family:'Press Start 2P',monospace; font-size:7px; padding:6px 10px; text-decoration:none; border:2px solid; transition:all 0.15s; letter-spacing:1px; }
+  .nav-social .twitch { color:#9146FF; border-color:#9146FF; }
+  .nav-social .twitch:hover { background:#9146FF; color:var(--charcoal3); }
+  .nav-social .yt { color:#FF0000; border-color:#FF0000; }
+  .nav-social .yt:hover { background:#FF0000; color:var(--white); }
+  .nav-social .fb { color:#1877F2; border-color:#1877F2; }
+  .nav-social .fb:hover { background:#1877F2; color:var(--white); }
+
+  /* BREADCRUMB */
+  .breadcrumb {
+    background: var(--charcoal2); border-bottom: 1px solid var(--charcoal4);
+    padding: 0.75rem 2rem; font-family:'Press Start 2P',monospace; font-size:7px; color:#444; letter-spacing:1px;
+  }
+  .breadcrumb a { color:var(--teal-dim); text-decoration:none; }
+  .breadcrumb a:hover { color:var(--teal); }
+  .breadcrumb span { color:#333; margin:0 0.5rem; }
+
+  /* HERO BANNER */
+  .review-hero {
+    position: relative; min-height: 420px;
+    display: flex; align-items: flex-end; overflow: hidden;
+    border-bottom: 3px solid var(--teal-dim);
+  }
+  .review-hero-bg {
+    position: absolute; inset: 0;
+    background: url('Enshrouded_4.png') center/cover no-repeat;
+  }
+  .review-hero-bg::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, var(--charcoal3) 0%, rgba(13,13,18,0.75) 50%, rgba(13,13,18,0.25) 100%);
+  }
+  .review-hero-content {
+    position: relative; z-index: 2; padding: 2.5rem 3rem; width: 100%;
+  }
+  .review-genre-badge {
+    display: inline-block; font-family:'Press Start 2P',monospace; font-size:7px;
+    background: var(--pink); color: var(--white); padding: 6px 12px; margin-bottom: 1rem;
+    border: 2px solid var(--pink-dark); box-shadow: 2px 2px 0 var(--pink-dark); letter-spacing:1px;
+  }
+  .review-hero-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(22px, 4vw, 44px); color: var(--teal);
+    text-shadow: 3px 3px 0 var(--teal-dark); line-height: 1.5;
+    margin-bottom: 1rem; max-width: 700px;
+  }
+  .review-hero-meta { display:flex; gap:2rem; align-items:center; flex-wrap:wrap; }
+  .meta-item { font-size:12px; color:#6a8a9a; letter-spacing:1px; }
+  .meta-item strong { color:var(--white); }
+
+  /* VERDICT STRIP */
+  .verdict-strip {
+    background: var(--charcoal2); border-top: 3px solid var(--teal);
+    border-bottom: 3px solid var(--teal-dim); padding: 1.5rem 3rem;
+    display: flex; align-items: center; gap: 3rem; flex-wrap: wrap;
+  }
+  .verdict-score-wrap { display:flex; align-items:baseline; gap:0.5rem; }
+  .verdict-score {
+    font-family:'Press Start 2P',monospace; font-size:52px; color:var(--teal);
+    text-shadow: 0 0 20px rgba(0,229,204,0.5), 3px 3px 0 var(--teal-dark); line-height:1;
+  }
+  .verdict-score-denom { font-family:'Press Start 2P',monospace; font-size:16px; color:var(--teal-dim); }
+  .verdict-label-wrap { display:flex; flex-direction:column; gap:0.5rem; }
+  .verdict-label { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--pink); letter-spacing:2px; }
+  .verdict-text { font-family:'Press Start 2P',monospace; font-size:14px; color:var(--white); letter-spacing:1px; }
+  .verdict-bars { flex:1; min-width:200px; }
+  .score-category { margin-bottom:0.75rem; }
+  .score-category-label {
+    font-family:'Press Start 2P',monospace; font-size:7px; color:#5a7a8a;
+    letter-spacing:1px; margin-bottom:4px; display:flex; justify-content:space-between;
+  }
+  .score-category-label span { color:var(--teal); }
+  .score-track { height:10px; background:var(--charcoal4); border:1px solid var(--charcoal4); position:relative; overflow:hidden; }
+  .score-fill { height:100%; background:var(--teal); box-shadow:0 0 8px rgba(0,229,204,0.5); }
+  .score-fill.pink { background:var(--pink); box-shadow:0 0 8px rgba(232,23,122,0.4); }
+  .verdict-badge {
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    padding:14px 20px; border:3px solid; letter-spacing:1px; text-align:center; white-space:nowrap;
+  }
+  .verdict-badge.must-play { color:var(--teal); border-color:var(--teal); box-shadow:4px 4px 0 var(--teal-dark); }
+
+  /* MAIN BODY */
+  .review-body {
+    max-width: 1100px; margin: 0 auto; padding: 4rem 2rem;
+    display: grid; grid-template-columns: 1fr 300px;
+    gap: 3rem; align-items: start;
+  }
+
+  /* REVIEW SECTIONS */
+  .review-section { margin-bottom: 3rem; }
+  .review-section-header {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--teal); letter-spacing:1px; margin-bottom:0.5rem;
+  }
+  .review-section-header::before { content:'>> '; color:var(--pink); }
+  .review-divider {
+    height:2px; background:linear-gradient(90deg,var(--teal),var(--pink),transparent); margin-bottom:1.5rem;
+  }
+  .review-text { font-size:15px; color:#8aaabb; line-height:2; margin-bottom:1.2rem; }
+
+  /* SCREENSHOTS */
+  .screenshot-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem; }
+  .screenshot {
+    border:2px solid var(--charcoal4); overflow:hidden;
+    aspect-ratio:16/9; transition:border-color 0.15s; display:block;
+  }
+  .screenshot:hover { border-color:var(--teal); }
+  .screenshot img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.3s; }
+  .screenshot:hover img { transform:scale(1.03); }
+  .screenshot-caption { font-size:11px; color:#3a5060; text-align:center; margin-top:0.4rem; letter-spacing:1px; }
+
+  /* PROS/CONS */
+  .pros-cons { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:2rem; }
+  .pros-box, .cons-box { background:var(--charcoal2); border:3px solid; padding:1.25rem; }
+  .pros-box { border-color:var(--teal); box-shadow:3px 3px 0 var(--teal-dim); }
+  .cons-box { border-color:var(--pink); box-shadow:3px 3px 0 var(--pink-dark); }
+  .pros-cons-title { font-family:'Press Start 2P',monospace; font-size:9px; margin-bottom:1rem; letter-spacing:1px; }
+  .pros-box .pros-cons-title { color:var(--teal); }
+  .cons-box .pros-cons-title { color:var(--pink); }
+  .pros-cons-list { list-style:none; }
+  .pros-cons-list li { font-size:13px; color:#7a9aaa; padding:0.4rem 0; border-bottom:1px solid var(--charcoal4); line-height:1.6; }
+  .pros-cons-list li:last-child { border-bottom:none; }
+  .pros-box .pros-cons-list li::before { content:'▶ '; color:var(--teal); }
+  .cons-box .pros-cons-list li::before { content:'▶ '; color:var(--pink); }
+
+  /* FINAL VERDICT */
+  .final-verdict {
+    background:var(--charcoal2); border:3px solid var(--teal);
+    box-shadow:6px 6px 0 var(--teal-dim); padding:2rem; margin-bottom:2rem; position:relative;
+  }
+  .final-verdict::before {
+    content:'★ FINAL VERDICT'; position:absolute; top:-14px; left:20px;
+    font-family:'Press Start 2P',monospace; font-size:8px;
+    background:var(--pink); color:var(--white); padding:5px 12px; border:2px solid var(--pink-dark);
+  }
+  .final-verdict-text { font-size:16px; color:#9abbc8; line-height:1.9; font-style:italic; }
+
+  /* SIDEBAR */
+  .sidebar-card { background:var(--charcoal2); border:3px solid var(--charcoal4); box-shadow:4px 4px 0 var(--teal-dim); margin-bottom:2rem; }
+  .sidebar-card-header { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--charcoal3); background:var(--teal); padding:10px 14px; letter-spacing:1px; }
+  .sidebar-card-body { padding:1.25rem; }
+  .game-info-row { display:flex; justify-content:space-between; align-items:flex-start; padding:0.6rem 0; border-bottom:1px solid var(--charcoal4); font-size:12px; }
+  .game-info-row:last-child { border-bottom:none; }
+  .game-info-label { color:#445a66; letter-spacing:1px; flex-shrink:0; margin-right:1rem; }
+  .game-info-value { color:var(--white); text-align:right; }
+  .platform-tags { display:flex; flex-wrap:wrap; gap:0.4rem; justify-content:flex-end; }
+  .platform-tag { font-family:'Press Start 2P',monospace; font-size:6px; padding:4px 8px; background:var(--charcoal4); color:var(--teal); border:1px solid var(--teal-dim); letter-spacing:1px; }
+  .sidebar-score-big { font-family:'Press Start 2P',monospace; font-size:40px; color:var(--teal); text-align:center; text-shadow:0 0 15px rgba(0,229,204,0.4), 3px 3px 0 var(--teal-dark); padding:1.5rem 0 0.5rem; }
+  .sidebar-score-label { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--teal-dim); text-align:center; letter-spacing:2px; margin-bottom:1.25rem; }
+  .sidebar-score-pips { display:flex; gap:4px; justify-content:center; flex-wrap:wrap; padding:0 1rem 1.25rem; }
+  .s-pip { width:14px; height:14px; border:2px solid var(--charcoal4); background:var(--charcoal3); }
+  .s-pip.on { background:var(--teal); border-color:var(--teal); }
+  .share-btns { display:flex; flex-direction:column; gap:0.75rem; }
+  .share-btn { font-family:'Press Start 2P',monospace; font-size:7px; padding:10px 14px; text-decoration:none; text-align:center; border:2px solid; letter-spacing:1px; transition:all 0.1s; cursor:pointer; }
+  .share-btn:hover { transform:translate(-2px,-2px); }
+  .share-btn.tw { color:#9146FF; border-color:#9146FF; box-shadow:3px 3px 0 #4b00cc; }
+  .share-btn.tw:hover { background:#9146FF; color:var(--charcoal3); }
+  .share-btn.yt { color:#FF0000; border-color:#FF0000; box-shadow:3px 3px 0 #900000; }
+  .share-btn.yt:hover { background:#FF0000; color:var(--white); }
+  .share-btn.fb { color:#1877F2; border-color:#1877F2; box-shadow:3px 3px 0 #0d4fa8; }
+  .share-btn.fb:hover { background:#1877F2; color:var(--white); }
+
+  /* MORE REVIEWS */
+  .more-reviews-section { background:var(--charcoal2); border-top:3px solid var(--teal-dim); padding:4rem 2rem; }
+  .more-reviews-inner { max-width:1100px; margin:0 auto; }
+  .section-header { font-family:'Press Start 2P',monospace; font-size:13px; color:var(--teal); text-shadow:2px 2px 0 var(--teal-dark); letter-spacing:2px; margin-bottom:0.5rem; }
+  .section-header::before { content:'>> '; color:var(--pink); }
+  .section-divider { height:3px; background:linear-gradient(90deg,var(--teal),var(--pink),transparent); margin-bottom:2.5rem; }
+  .more-reviews-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+  .mini-card { background:var(--charcoal3); border:3px solid var(--charcoal4); box-shadow:3px 3px 0 var(--teal-dim); text-decoration:none; color:inherit; display:block; transition:all 0.15s; }
+  .mini-card:hover { border-color:var(--teal); transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--teal); }
+  .mini-card-img { width:100%; height:120px; background:var(--charcoal4); display:flex; align-items:center; justify-content:center; font-size:32px; color:var(--teal-dim); border-bottom:2px solid var(--charcoal4); overflow:hidden; }
+  .mini-card-img img { width:100%; height:100%; object-fit:cover; }
+  .mini-card-body { padding:1rem; }
+  .mini-card-genre { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--pink); letter-spacing:2px; margin-bottom:0.4rem; }
+  .mini-card-title { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--teal); line-height:1.7; margin-bottom:0.5rem; }
+  .mini-card-score { font-family:'Press Start 2P',monospace; font-size:10px; color:var(--teal); }
+
+  /* FOOTER */
+  footer { background:var(--charcoal3); border-top:3px solid var(--teal-dim); text-align:center; padding:3rem 2rem; }
+  .footer-uc { font-family:'Press Start 2P',monospace; font-size:22px; font-style:italic; color:var(--teal); position:relative; display:inline-block; margin-bottom:0.5rem; }
+  .footer-uc::before { content:'UC'; position:absolute; inset:0; color:var(--red-glitch); transform:translate(-2px,0); opacity:0.5; }
+  .footer-uc::after  { content:'UC'; position:absolute; inset:0; color:var(--cyan-glitch); transform:translate(2px,0); opacity:0.5; }
+  .footer-logo { font-family:'Press Start 2P',monospace; font-size:11px; color:var(--teal); text-shadow:2px 2px 0 var(--teal-dark); margin-bottom:0.3rem; }
+  .footer-tagline { font-family:'VT323',monospace; font-size:22px; color:var(--teal-dim); margin-bottom:2rem; }
+  .footer-links { display:flex; justify-content:center; gap:2rem; list-style:none; margin-bottom:2rem; }
+  .footer-links a { font-family:'Press Start 2P',monospace; font-size:7px; color:#333; text-decoration:none; letter-spacing:1px; transition:color 0.15s; }
+  .footer-links a:hover { color:var(--teal); }
+  .footer-copy { font-size:12px; color:#2a3a44; letter-spacing:1px; }
+  .footer-copy span { color:var(--teal-dim); }
+  .cursor { display:inline-block; width:10px; height:16px; background:var(--pink); vertical-align:middle; animation:blink 1s step-end infinite; margin-left:4px; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  @media (max-width: 768px) {
+    .review-body { grid-template-columns:1fr; }
+    .review-sidebar { order:-1; }
+    .pros-cons { grid-template-columns:1fr; }
+    .verdict-strip { gap:1.5rem; padding:1.5rem; }
+    .verdict-score { font-size:36px; }
+    .review-hero-content { padding:1.5rem; }
+    nav { flex-wrap:wrap; height:auto; padding:0.75rem 1rem; gap:0.5rem; }
+    .nav-links { gap:1rem; }
+    .nav-social { gap:0.5rem; }
+    .screenshot-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="the-unemployed-couch.html" class="nav-logo">
+    <span class="nav-logo-uc">UC</span>
+    THE <span>UNEMPLOYED</span> COUCH
+  </a>
+  <ul class="nav-links">
+    <li><a href="the-unemployed-couch.html#reviews">REVIEWS</a></li>
+    <li><a href="the-unemployed-couch.html#about">ABOUT</a></li>
+  </ul>
+  <div class="nav-social">
+    <a href="https://www.twitch.tv/scopesgt13" target="_blank" class="nav-social twitch">TWITCH</a>
+    <a href="https://www.youtube.com/@ScopeSgt13" target="_blank" class="nav-social yt">YOUTUBE</a>
+    <a href="https://www.facebook.com/TheUnemployedCouch/?view_public_for=114348103551438" target="_blank" class="nav-social fb">FACEBOOK</a>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="the-unemployed-couch.html">HOME</a>
+  <span>▶</span>
+  <a href="the-unemployed-couch.html#reviews">REVIEWS</a>
+  <span>▶</span>
+  ENSHROUDED
+</div>
+
+<!-- HERO BANNER — uses Enshrouded_4 (the village courtyard shot) as background -->
+<div class="review-hero">
+  <div class="review-hero-bg"></div>
+  <div class="review-hero-content">
+    <div class="review-genre-badge">SURVIVAL RPG · 2024</div>
+    <h1 class="review-hero-title">ENSHROUDED</h1>
+    <div class="review-hero-meta">
+      <div class="meta-item">BY <strong>SCOPESGT13</strong></div>
+      <div class="meta-item">REVIEWED <strong>MAY 2025</strong></div>
+      <div class="meta-item">PLAYED ON <strong>PC</strong></div>
+      <div class="meta-item">HOURS PLAYED <strong>ADD YOUR HOURS</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- VERDICT STRIP -->
+<div class="verdict-strip">
+  <div class="verdict-score-wrap">
+    <div class="verdict-score">?.?</div>
+    <div class="verdict-score-denom">/10</div>
+  </div>
+  <div class="verdict-label-wrap">
+    <div class="verdict-label">OVERALL VERDICT</div>
+    <div class="verdict-text">YOUR CALL</div>
+  </div>
+  <div class="verdict-bars">
+    <div class="score-category">
+      <div class="score-category-label">GAMEPLAY <span>?/10</span></div>
+      <div class="score-track"><div class="score-fill" id="bar-gameplay" style="width:0%"></div></div>
+    </div>
+    <div class="score-category">
+      <div class="score-category-label">BUILDING <span>?/10</span></div>
+      <div class="score-track"><div class="score-fill" id="bar-building" style="width:0%"></div></div>
+    </div>
+    <div class="score-category">
+      <div class="score-category-label">VISUALS <span>?/10</span></div>
+      <div class="score-track"><div class="score-fill" id="bar-visuals" style="width:0%"></div></div>
+    </div>
+    <div class="score-category">
+      <div class="score-category-label">VALUE <span>?/10</span></div>
+      <div class="score-track"><div class="score-fill pink" id="bar-value" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="verdict-badge must-play">★ YOUR<br>VERDICT</div>
+</div>
+
+<!-- MAIN BODY -->
+<div class="review-body">
+  <div class="review-content">
+
+    <!-- OVERVIEW -->
+    <div class="review-section">
+      <div class="review-section-header">OVERVIEW</div>
+      <div class="review-divider"></div>
+      <p class="review-text">
+        Write your opening take on Enshrouded here. What is it — survival crafting meets action RPG in a world covered by a mysterious deadly fog called the Shroud. Set the scene in your own words. What pulled you in?
+      </p>
+      <p class="review-text">
+        Second paragraph — your first impressions. Did it hook you right away or take some time to click? Talk about what kind of player this game is built for.
+      </p>
+    </div>
+
+    <!-- GAMEPLAY -->
+    <div class="review-section">
+      <div class="review-section-header">GAMEPLAY</div>
+      <div class="review-divider"></div>
+      <p class="review-text">
+        How does Enshrouded feel to actually play? The combat, the exploration, gliding around the map — give your honest take. Talk about the Shroud mechanic and how it adds tension to exploration.
+      </p>
+      <p class="review-text">
+        How's the progression system? Does leveling up feel rewarding? Talk about the skill trees, the crafting loop, and whether the grind feels satisfying or tedious.
+      </p>
+    </div>
+
+    <!-- SCREENSHOTS -->
+    <div class="review-section">
+      <div class="review-section-header">SCREENSHOTS</div>
+      <div class="review-divider"></div>
+      <div class="screenshot-grid">
+        <div>
+          <div class="screenshot">
+            <img src="Enshrouded_3.png" alt="Enshrouded - Alchemist's shop interior with shelves of potions">
+          </div>
+          <div class="screenshot-caption">THE ALCHEMIST'S SHOP — DETAIL IS INSANE</div>
+        </div>
+        <div>
+          <div class="screenshot">
+            <img src="Enshrouded_2.png" alt="Enshrouded - Character sitting at night watching a glowing beacon">
+          </div>
+          <div class="screenshot-caption">NIGHT ATMOSPHERE HITS DIFFERENT</div>
+        </div>
+        <div>
+          <div class="screenshot">
+            <img src="Enshrouded_1.png" alt="Enshrouded - Character creation screen with preset options">
+          </div>
+          <div class="screenshot-caption">CHARACTER CREATION — SOLID OPTIONS</div>
+        </div>
+        <div>
+          <div class="screenshot">
+            <img src="Enshrouded_4.png" alt="Enshrouded - Village courtyard with NPCs and medieval architecture">
+          </div>
+          <div class="screenshot-caption">THE WORLD FEELS ALIVE WITH NPCs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUILDING & WORLD -->
+    <div class="review-section">
+      <div class="review-section-header">BUILDING & WORLD</div>
+      <div class="review-divider"></div>
+      <p class="review-text">
+        Enshrouded's building system is one of its biggest selling points. Talk about how freeform it is, whether the base building scratch that creative itch, and how it holds up compared to other survival builders like Valheim or Grounded.
+      </p>
+      <p class="review-text">
+        How's the world itself? The biomes, the scale, the atmosphere. Those screenshots you took tell a story — put it into words here.
+      </p>
+    </div>
+
+    <!-- PROS & CONS -->
+    <div class="review-section">
+      <div class="review-section-header">PROS & CONS</div>
+      <div class="review-divider"></div>
+      <div class="pros-cons">
+        <div class="pros-box">
+          <div class="pros-cons-title">✦ THE GOOD</div>
+          <ul class="pros-cons-list">
+            <li>Stunning world with incredible visual detail</li>
+            <li>Building system is deep and satisfying</li>
+            <li>Co-op makes everything better</li>
+            <li>Massive map with tons to explore</li>
+            <li>Add your own pro here</li>
+          </ul>
+        </div>
+        <div class="cons-box">
+          <div class="pros-cons-title">✦ THE BAD</div>
+          <ul class="pros-cons-list">
+            <li>Early access — some rough edges remain</li>
+            <li>Add your con here</li>
+            <li>Add your con here</li>
+            <li>Add your con here</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINAL VERDICT -->
+    <div class="review-section">
+      <div class="review-section-header">FINAL VERDICT</div>
+      <div class="review-divider"></div>
+      <div class="final-verdict">
+        <p class="final-verdict-text">
+          "Write your closing verdict here. Is Enshrouded worth your time and money? Who should buy it right now, who should wait? Give it to them straight — couch style."
+        </p>
+      </div>
+    </div>
+
+  </div><!-- end review-content -->
+
+  <!-- SIDEBAR -->
+  <div class="review-sidebar">
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">★ UC SCORE</div>
+      <div class="sidebar-score-big" id="sidebar-score">?.?</div>
+      <div class="sidebar-score-label">OUT OF 10</div>
+      <div class="sidebar-score-pips" id="sidebar-pips"></div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">GAME INFO</div>
+      <div class="sidebar-card-body">
+        <div class="game-info-row">
+          <span class="game-info-label">DEVELOPER</span>
+          <span class="game-info-value">Keen Games</span>
+        </div>
+        <div class="game-info-row">
+          <span class="game-info-label">PUBLISHER</span>
+          <span class="game-info-value">Keen Games</span>
+        </div>
+        <div class="game-info-row">
+          <span class="game-info-label">RELEASED</span>
+          <span class="game-info-value">JAN 24, 2024</span>
+        </div>
+        <div class="game-info-row">
+          <span class="game-info-label">GENRE</span>
+          <span class="game-info-value">Survival RPG</span>
+        </div>
+        <div class="game-info-row">
+          <span class="game-info-label">PRICE</span>
+          <span class="game-info-value">$29.99</span>
+        </div>
+        <div class="game-info-row">
+          <span class="game-info-label">PLATFORMS</span>
+          <div class="platform-tags">
+            <span class="platform-tag">PC</span>
+          </div>
+        </div>
+        <div class="game-info-row">
+          <span class="game-info-label">CO-OP</span>
+          <span class="game-info-value">Up to 16</span>
+        </div>
+        <div class="game-info-row">
+          <span class="game-info-label">HOURS PLAYED</span>
+          <span class="game-info-value">YOUR HOURS</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">FIND ME HERE</div>
+      <div class="sidebar-card-body">
+        <div class="share-btns">
+          <a href="https://www.twitch.tv/scopesgt13" target="_blank" class="share-btn tw">📺 WATCH ON TWITCH</a>
+          <a href="https://www.youtube.com/@ScopeSgt13" target="_blank" class="share-btn yt">▶ SEE ON YOUTUBE</a>
+          <a href="https://www.facebook.com/TheUnemployedCouch/?view_public_for=114348103551438" target="_blank" class="share-btn fb">👍 SHARE ON FACEBOOK</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MORE REVIEWS -->
+<div class="more-reviews-section">
+  <div class="more-reviews-inner">
+    <p class="section-header">MORE REVIEWS</p>
+    <div class="section-divider"></div>
+    <div class="more-reviews-grid">
+      <a href="#" class="mini-card">
+        <div class="mini-card-img">🗡️</div>
+        <div class="mini-card-body">
+          <div class="mini-card-genre">FANTASY RPG</div>
+          <div class="mini-card-title">GAME TITLE ONE</div>
+          <div class="mini-card-score">?.?/10</div>
+        </div>
+      </a>
+      <a href="#" class="mini-card">
+        <div class="mini-card-img">🔫</div>
+        <div class="mini-card-body">
+          <div class="mini-card-genre">SHOOTER</div>
+          <div class="mini-card-title">GAME TITLE TWO</div>
+          <div class="mini-card-score">?.?/10</div>
+        </div>
+      </a>
+      <a href="#" class="mini-card">
+        <div class="mini-card-img">👾</div>
+        <div class="mini-card-body">
+          <div class="mini-card-genre">PLATFORMER</div>
+          <div class="mini-card-title">GAME TITLE THREE</div>
+          <div class="mini-card-score">?.?/10</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-uc">UC</div>
+  <p class="footer-logo">THE UNEMPLOYED COUCH</p>
+  <p class="footer-tagline">Game Hard. Work Never.<span class="cursor"></span></p>
+  <ul class="footer-links">
+    <li><a href="the-unemployed-couch.html#reviews">REVIEWS</a></li>
+    <li><a href="the-unemployed-couch.html#about">ABOUT</a></li>
+    <li><a href="https://www.twitch.tv/scopesgt13" target="_blank">TWITCH</a></li>
+    <li><a href="https://www.youtube.com/@ScopeSgt13" target="_blank">YOUTUBE</a></li>
+    <li><a href="https://www.facebook.com/TheUnemployedCouch/?view_public_for=114348103551438" target="_blank">FACEBOOK</a></li>
+  </ul>
+  <p class="footer-copy">© 2025 <span>THE UNEMPLOYED COUCH</span> · ALL RIGHTS RESERVED · PLAYER 1</p>
+</footer>
+
+<script>
+  // ---- FILL THESE IN WITH YOUR REAL SCORES ----
+  const scores = {
+    overall:  8.0,   // change this to your final score
+    gameplay: 80,    // percent (e.g. 80 = 8/10)
+    building: 90,
+    visuals:  90,
+    value:    80,
+  };
+
+  // Update score displays
+  document.querySelector('.verdict-score').textContent = scores.overall.toFixed(1);
+  document.getElementById('sidebar-score').textContent = scores.overall.toFixed(1);
+
+  // Animate score bars
+  setTimeout(() => {
+    document.getElementById('bar-gameplay').style.width = scores.gameplay + '%';
+    document.getElementById('bar-building').style.width = scores.building + '%';
+    document.getElementById('bar-visuals').style.width  = scores.visuals  + '%';
+    document.getElementById('bar-value').style.width    = scores.value    + '%';
+
+    document.querySelector('.score-category-label:nth-child(1) span');
+
+    // Update labels
+    const labels = document.querySelectorAll('.score-category-label span');
+    labels[0].textContent = (scores.gameplay / 10).toFixed(0) + '/10';
+    labels[1].textContent = (scores.building / 10).toFixed(0) + '/10';
+    labels[2].textContent = (scores.visuals  / 10).toFixed(0) + '/10';
+    labels[3].textContent = (scores.value    / 10).toFixed(0) + '/10';
+  }, 300);
+
+  // Build sidebar pips
+  const pipsEl = document.getElementById('sidebar-pips');
+  for (let i = 0; i < 10; i++) {
+    const pip = document.createElement('div');
+    pip.className = 's-pip' + (i < Math.round(scores.overall) ? ' on' : '');
+    pipsEl.appendChild(pip);
+  }
+</script>
+</body>
+</html>
